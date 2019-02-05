@@ -1,0 +1,32 @@
+{
+  "name": "kickback",
+  "version": "1.0.0",
+  "description": "An app for scheduling meetups with friends",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kaikaine/Kickback.git"
+  },
+  "author": "Kairi Breckenridge",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Kaikaine/Kickback/issues"
+  },
+  "homepage": "https://github.com/Kaikaine/Kickback#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.18.3",
+    "concurrently": "^4.1.0",
+    "express": "^4.16.4",
+    "jsonwebtoken": "^8.4.0",
+    "mongoose": "^5.4.9",
+    "passport": "^0.4.0",
+    "passport-jwt": "^4.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.9"
+  }
+}
