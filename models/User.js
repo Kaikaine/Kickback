@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
-    name: {
+    username: {
         type: String,
         required: true
     },
@@ -12,6 +12,7 @@ const UserSchema = new Schema({
     },
     messages: [],
     events: [],
+    friends: [],
     date: {
         type: Date,
         default: Date.now
