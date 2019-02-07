@@ -46,4 +46,11 @@ router.post("/register", (req, res) => {
   });
 });
 
+// route    GET api/users/login
+// desc     Login user / return jwt token
+// access   public
+router.post('/login', (req,res) => {
+    
+})
+
 module.exports = router;
