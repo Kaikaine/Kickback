@@ -49,8 +49,47 @@ router.post("/register", (req, res) => {
 // route    GET api/users/login
 // desc     Login user / return jwt token
 // access   public
-router.post('/login', (req,res) => {
-    
-})
+router.post("/login", (req, res) => {
+  const { errors, isValid } = validateLoginInput(req.body);
+  // Check validation
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
+
+  User.findOne({ username: req.body.username })
+    .then(user => {
+      // check
+      if (!user) {
+          errors.username = 'User not found'
+        return res.status(404).json(errors);
+      }
+
+      // check password
+      bcrypt.compare(req.body.password, user.password).then(isMatch => {
+        if (isMatch) {
+          // User matched
+
+          const payload = {
+            id: user._id,
+            name: user.username,
+          };
+
+          // Sign token
+          jwt.sign(payload, keys.secret, { expiresIn: 7200 }, (err, token) => {
+            res.json({
+              success: true,
+              token: "Bearer " + token
+            });
+          });
+        } else {
+            errors.password = "Password incorrect"
+          return res.status(400).json(errors);
+        }
+      });
+    })
+    .catch(err => {
+      console.log(err);
+    });
+});
 
 module.exports = router;
