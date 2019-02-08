@@ -59,6 +59,20 @@ router.get("/:from_id/:to_id", (req, res) => {
       return res.status(400).json(errors);
     }
 
+    // look through messages
+    // if req.params.from_id === from 
+    // and if req.params.to_id === to
+    // if true res.json the data
+
+    Message.find()
+    .then(msg => {
+        if (msg.to == req.params.to_id || msg.to == req.params.from_id) {
+            if (msg.from == req.params.to_id || msg.from == req.params.from_id) {
+                res.json(msg)
+            }
+        }
+    })
+    
 
 })
 
