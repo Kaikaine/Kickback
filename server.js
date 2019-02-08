@@ -5,6 +5,7 @@ const passport = require('passport')
 const app = express()
 
 const users = require('./routes/api/users')
+const messages = require('./routes/api/messages')
 
 
 app.use(bodyParser.urlencoded({extended:false}))
@@ -12,6 +13,7 @@ app.use(bodyParser.json())
 
 // USE routes
 app.use('/api/users', users)
+app.use('/api/messages', messages)
 
 const db = require('./config/keys').mongoURI
 

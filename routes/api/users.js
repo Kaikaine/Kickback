@@ -8,6 +8,9 @@ const passport = require("passport");
 const User = require("../../models/User");
 require("../../config/passport")(passport);
 
+const validateRegisterInput = require("../../validation/register");
+const validateLoginInput = require("../../validation/login");
+
 // route    POST api/users/register
 // desc     register a user
 // access   public
@@ -22,12 +25,12 @@ router.post("/register", (req, res) => {
     if (user) {
       errors.username = "Username already taken";
       return res.status(400).json(errors);
-    } else {
-      const newUser = new User({
-        username: req.body.username,
-        password: req.body.password
-      });
     }
+    
+    const newUser = new User({
+      username: req.body.username,
+      password: req.body.password
+    });
 
     bcrypt.genSalt(10, (err, salt) => {
       bcrypt.hash(newUser.password, salt, (err, hash) => {
@@ -60,7 +63,7 @@ router.post("/login", (req, res) => {
     .then(user => {
       // check
       if (!user) {
-          errors.username = 'User not found'
+        errors.username = "User not found";
         return res.status(404).json(errors);
       }
 
@@ -71,7 +74,7 @@ router.post("/login", (req, res) => {
 
           const payload = {
             id: user._id,
-            name: user.username,
+            name: user.username
           };
 
           // Sign token
@@ -82,7 +85,7 @@ router.post("/login", (req, res) => {
             });
           });
         } else {
-            errors.password = "Password incorrect"
+          errors.password = "Password incorrect";
           return res.status(400).json(errors);
         }
       });
