@@ -14,7 +14,7 @@ const validateMessageInput = require("../../validation/message");
 // @route   POST api/message/:from_id/:to_id
 // @desc    Create message
 // @access  private
-router.post("/:from_id/:to_id", (req, res) => {
+router.post("/:from_id/:to_id", passport.authenticate("jwt", { session: false }), (req, res) => {
   const { errors, isValid } = validateMessageInput(req.body);
 
   if (!isValid) {
@@ -52,22 +52,29 @@ router.post("/:from_id/:to_id", (req, res) => {
 // @desc    Create message
 // @access  private
 
-router.get("/:from_id/:to_id", (req, res) => {
+router.get("/:from_id/:to_id", passport.authenticate("jwt", { session: false }), (req, res) => {
     
     // find user by req.params.from_id
     // go thru user.messages
     // same if statements as before
     // use a forEach loop to iterate thru messages
+    
+    const texts = []
+
     User.findById(req.params.from_id)
     .then(user => {
+        // console.log(user)
         user.messages.forEach(msg => {
-            if (msg.to == req.params.to_id || msg.to == req.params.from_id) {
-                if (msg.from == req.params.to_id || msg.from == req.params.from_id) {
-                    res.json(msg.message)
+            if (msg.to === req.params.to_id || msg.to === req.params.from_id) {
+                if (msg.from === req.params.to_id || msg.from === req.params.from_id) {
+                    console.log(msg)
+                    texts.push(msg)
                 }
             }
         })
+        res.json(texts)
     })
+    .catch(err => console.log(err))
 })
 
 module.exports = router;
