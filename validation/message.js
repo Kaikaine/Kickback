@@ -7,9 +7,9 @@ module.exports = function validateMessageInput(data) {
     data.to = !isEmpty(data.to) ? data.to : ''
     data.message = !isEmpty(data.message) ? data.message : ''
 
-    if(Validator.isEmpty(data.to)) {
-        errors.username = 'To field is required'
-    }
+    // if(Validator.isEmpty(data.to)) {
+    //     errors.username = 'To field is required'
+    // }
 
     if(Validator.isEmpty(data.message)) {
         errors.password = 'Message field is required'

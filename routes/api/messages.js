@@ -16,7 +16,7 @@ const validateMessageInput = require("../../validation/message");
 // @access  private
 router.post("/:from_id/:to_id", (req, res) => {
   const { errors, isValid } = validateMessageInput(req.body);
-  // Check validation
+
   if (!isValid) {
     return res.status(400).json(errors);
   }
@@ -53,27 +53,21 @@ router.post("/:from_id/:to_id", (req, res) => {
 // @access  private
 
 router.get("/:from_id/:to_id", (req, res) => {
-    const { errors, isValid } = validateMessageInput(req.body);
-    // Check validation
-    if (!isValid) {
-      return res.status(400).json(errors);
-    }
-
-    // look through messages
-    // if req.params.from_id === from 
-    // and if req.params.to_id === to
-    // if true res.json the data
-
-    Message.find()
-    .then(msg => {
-        if (msg.to == req.params.to_id || msg.to == req.params.from_id) {
-            if (msg.from == req.params.to_id || msg.from == req.params.from_id) {
-                res.json(msg)
-            }
-        }
-    })
     
-
+    // find user by req.params.from_id
+    // go thru user.messages
+    // same if statements as before
+    // use a forEach loop to iterate thru messages
+    User.findById(req.params.from_id)
+    .then(user => {
+        user.messages.forEach(msg => {
+            if (msg.to == req.params.to_id || msg.to == req.params.from_id) {
+                if (msg.from == req.params.to_id || msg.from == req.params.from_id) {
+                    res.json(msg.message)
+                }
+            }
+        })
+    })
 })
 
 module.exports = router;

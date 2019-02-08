@@ -18,7 +18,7 @@ router.post("/register", (req, res) => {
   const { errors, isValid } = validateRegisterInput(req.body);
 
   if (!isValid) {
-    return res.status.json(errors);
+    return res.status(400).json(errors);
   }
 
   User.findOne({ username: req.body.email }).then(user => {
@@ -26,7 +26,7 @@ router.post("/register", (req, res) => {
       errors.username = "Username already taken";
       return res.status(400).json(errors);
     }
-    
+
     const newUser = new User({
       username: req.body.username,
       password: req.body.password
@@ -81,7 +81,8 @@ router.post("/login", (req, res) => {
           jwt.sign(payload, keys.secret, { expiresIn: 7200 }, (err, token) => {
             res.json({
               success: true,
-              token: "Bearer " + token
+              token: "Bearer " + token,
+              id: user._id
             });
           });
         } else {
@@ -94,5 +95,18 @@ router.post("/login", (req, res) => {
       console.log(err);
     });
 });
+
+// route    GET api/users/current
+// desc     Return current user
+// access   private
+router.get(
+    "/current",
+    passport.authenticate("jwt", { session: false }),
+    (req, res) => {
+      res.json({
+        user: req.user
+      });
+    }
+  );
 
 module.exports = router;
