@@ -6,6 +6,7 @@ const app = express()
 
 const users = require('./routes/api/users')
 const messages = require('./routes/api/messages')
+const events = require('./routes/api/events')
 
 
 app.use(bodyParser.urlencoded({extended:false}))
@@ -14,6 +15,7 @@ app.use(bodyParser.json())
 // USE routes
 app.use('/api/users', users)
 app.use('/api/messages', messages)
+app.use('/api/events', events)
 
 const db = require('./config/keys').mongoURI
 

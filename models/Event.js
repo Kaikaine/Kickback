@@ -5,19 +5,21 @@ const EventSchema = new Schema({
     title: {
         type: String,
         required: true,
-        max: 40
     },
     description: {
         type: String,
         required: true,
-        max: 240
     },
     location: {
         type: String,
         required: true
     },
+    Yes: [],
+    Maybe: [],
     date: {
         type: Date,
         required: true
     }
 })
+
+module.exports = Event = mongoose.model('Event', EventSchema)

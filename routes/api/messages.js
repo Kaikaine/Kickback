@@ -1,8 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const keys = require("../../config/keys");
 const passport = require("passport");
 // Load user model
 const User = require("../../models/User");
@@ -59,7 +56,7 @@ router.get("/:from_id/:to_id", passport.authenticate("jwt", { session: false }),
     // same if statements as before
     // use a forEach loop to iterate thru messages
     
-    const texts = []
+    const messages = []
 
     User.findById(req.params.from_id)
     .then(user => {
@@ -68,11 +65,11 @@ router.get("/:from_id/:to_id", passport.authenticate("jwt", { session: false }),
             if (msg.to === req.params.to_id || msg.to === req.params.from_id) {
                 if (msg.from === req.params.to_id || msg.from === req.params.from_id) {
                     console.log(msg)
-                    texts.push(msg)
+                    messages.push(msg)
                 }
             }
         })
-        res.json(texts)
+        res.json(messages)
     })
     .catch(err => console.log(err))
 })
