@@ -11,18 +11,18 @@ const validateMessageInput = require("../../validation/message");
 // @route   POST api/message/:from_id/:to_id
 // @desc    Create message
 // @access  private
-router.post("/:from_id/:to_id", passport.authenticate("jwt", { session: false }), (req, res) => {
+router.post("/:from_name/:to_name", passport.authenticate("jwt", { session: false }), (req, res) => {
   const { errors, isValid } = validateMessageInput(req.body);
 
   if (!isValid) {
     return res.status(400).json(errors);
   }
 
-  User.findById(req.params.to_id)
+  User.find({username: req.params.to_id})
   .then(user => {
     const newMessage = new Message({
-        to: req.params.to_id,
-        from: req.params.from_id,
+        to: req.params.to_name,
+        from: req.params.from_name,
         message: req.body.message
     })
 
@@ -31,11 +31,11 @@ router.post("/:from_id/:to_id", passport.authenticate("jwt", { session: false })
       user.save()
   })
 
-  User.findById(req.params.from_id)
+  User.find({username: req.params.from_name})
   .then(user => {
       const newMessage = new Message({
-          to: req.params.to_id,
-          from: req.params.from_id,
+          to: req.params.to_name,
+          from: req.params.from_name,
           message: req.body.message
       })
 
@@ -54,7 +54,6 @@ router.get("/:from_id/:to_id", passport.authenticate("jwt", { session: false }),
     // find user by req.params.from_id
     // go thru user.messages
     // same if statements as before
-    // use a forEach loop to iterate thru messages
     
     const messages = []
 
@@ -64,7 +63,6 @@ router.get("/:from_id/:to_id", passport.authenticate("jwt", { session: false }),
         user.messages.forEach(msg => {
             if (msg.to === req.params.to_id || msg.to === req.params.from_id) {
                 if (msg.from === req.params.to_id || msg.from === req.params.from_id) {
-                    console.log(msg)
                     messages.push(msg)
                 }
             }
