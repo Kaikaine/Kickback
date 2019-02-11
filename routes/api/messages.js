@@ -8,7 +8,7 @@ require("../../config/passport")(passport);
 
 const validateMessageInput = require("../../validation/message");
 
-// @route   POST api/message/:from_id/:to_id
+// @route   POST api/message/:from_name/:to_name
 // @desc    Create message
 // @access  private
 router.post("/:from_name/:to_name", passport.authenticate("jwt", { session: false }), (req, res) => {
@@ -18,7 +18,7 @@ router.post("/:from_name/:to_name", passport.authenticate("jwt", { session: fals
     return res.status(400).json(errors);
   }
 
-  User.find({username: req.params.to_id})
+  User.findOne({username: req.params.to_name})
   .then(user => {
     const newMessage = new Message({
         to: req.params.to_name,
@@ -30,8 +30,9 @@ router.post("/:from_name/:to_name", passport.authenticate("jwt", { session: fals
 
       user.save()
   })
+  .catch(err => console.log(err))
 
-  User.find({username: req.params.from_name})
+  User.findOne({username: req.params.from_name})
   .then(user => {
       const newMessage = new Message({
           to: req.params.to_name,
@@ -43,26 +44,27 @@ router.post("/:from_name/:to_name", passport.authenticate("jwt", { session: fals
 
       user.save().then(user => res.json(user))
   })
+  .catch(err => console.log(err))
 });
 
-// @route   GET api/message/:from_id/:to_id
+// @route   GET api/message/:from_name/:to_name
 // @desc    Create message
 // @access  private
 
-router.get("/:from_id/:to_id", passport.authenticate("jwt", { session: false }), (req, res) => {
+router.get("/:from_name/:to_name", passport.authenticate("jwt", { session: false }), (req, res) => {
     
-    // find user by req.params.from_id
+    // find user by req.params.from_name
     // go thru user.messages
     // same if statements as before
     
     const messages = []
 
-    User.findById(req.params.from_id)
+    User.findOne({username: req.params.from_name})
     .then(user => {
         // console.log(user)
         user.messages.forEach(msg => {
-            if (msg.to === req.params.to_id || msg.to === req.params.from_id) {
-                if (msg.from === req.params.to_id || msg.from === req.params.from_id) {
+            if (msg.to === req.params.to_name || msg.to === req.params.from_name) {
+                if (msg.from === req.params.to_name || msg.from === req.params.from_name) {
                     messages.push(msg)
                 }
             }
