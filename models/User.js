@@ -12,6 +12,7 @@ const UserSchema = new Schema({
     },
     messages: [],
     events: [],
+    pending: [],
     friends: [],
     date: {
         type: Date,
