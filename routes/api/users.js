@@ -21,7 +21,7 @@ router.post("/register", (req, res) => {
     return res.status(400).json(errors);
   }
 
-  User.findOne({ username: req.body.email }).then(user => {
+  User.findOne({ username: req.body.username }).then(user => {
     if (user) {
       errors.username = "Username already taken";
       return res.status(400).json(errors);
