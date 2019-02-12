@@ -16,30 +16,43 @@ router.post(
     passport.authenticate("jwt", { session: false }),
     (req, res) => {
   
-      User.find({username: req.body.username})
+      User.find({username: req.params.username})
         .then(user => {
-          User.find({username: req.user.username})
-          .then(user2 => {
-              if(user2.pending.includes(user.username)) {
-                  user2.friends.push(req.body.username)
-                  user.friends.push(req.user.username)
+          // console.log(user)
+          // put second user in map function
+          user.map(key => {
+            // console.log(key.pending)
+            User.find({username: req.user.username})
+            .then(user2 => {
+              // probably map here as well
+              user2.map(key2 => {
+                // key == user key2 == user2
+                console.log(key.username)
+                if(key2.pending.filter(user => (user.username == key.username))) {
+                  key2.friends.push(req.body.username)
+                  key.friends.push(req.user.username)
                 //   remove user from pending array
                 // save user and user2
-                const removeIndex = user.pending
+                const removeIndex = key.pending
                 .map(pending => pending.username)
                 .indexOf(req.body.username)
 
-                user.pending.splice(removeIndex,1)
-                user2.save()
-                user.save().then(res.json(user))
+                key.pending.splice(removeIndex,1)
+                key2.save()
+                key.save().then(res.json(key))
                 
               } else {
+                console.log(key2.pending.username)
                 const newFriend = {
                   username: req.user.username
                 }
-                user2.pending.push(newFriend)
-                user2.save().then(res.json(user2))
+                // key2.pending.push(newFriend)
+                key2.save().then(res.json(user2))
               }
+              })
+                
+            })
+            .catch(err => console.log(err));
           })
         })
         .catch(err => console.log(err));
