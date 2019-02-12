@@ -29,8 +29,8 @@ router.post(
                 // key == user key2 == user2
                 console.log(key.username)
                 if(key2.pending.filter(user => (user.username == key.username))) {
-                  key2.friends.push(req.body.username)
-                  key.friends.push(req.user.username)
+                  key2.friends.push({username: req.body.username})
+                  key.friends.push({username: req.user.username})
                 //   remove user from pending array
                 // save user and user2
                 const removeIndex = key.pending
